@@ -21,6 +21,7 @@ function setup() {
   applyFilter(pic2, grayFilter);
   applyFilter(pic3, invertFilter);
   applyFilter(pic4, onlyRedFilter);
+  applyAsciiFilter(pic1);
 }
 
 function draw() {
@@ -48,7 +49,49 @@ function noFilter(r, g, b, a) {
 function grayFilter(r, g, b, a) {
   let avg = Math.floor((r + g + b)/3)
   return [avg, avg, avg, a]
+
+  // 01234567   256
+  //  .:-=+*#   %@                           
 }
+
+function asciifilter(r, g, b, a) {
+  let avg = Math.floor((r + g + b)/3);
+    switch (Math.floor(avg/32)) {
+      case 0:
+        return ' '
+      case 1:
+        return '.'
+      case 2:
+        return ':'
+      case 3:
+        return '-'
+      case 4:
+        return '='
+      case 5:
+        return '+'
+      case 6:
+        return '*'
+      case 7:
+        return '#'
+      default:
+        return '@'; 
+  }
+}
+
+function applyAsciiFilter(img) {
+  let out = '';
+  img.loadPixels()
+  for (let y = 0; y < img.height; y++) {
+    out = ''
+    for (let x = 0; x < img.width; x++) {
+      let res = asciifilter(img.pixels[0], img.pixels[1], img.pixels[2], img.pixels[2]);
+      out = out + res;
+    }
+    out = out + '\n';
+  }
+  console.log(out)
+}
+
 
 function applyFilter(img, filterfunc) {
   img.loadPixels()
