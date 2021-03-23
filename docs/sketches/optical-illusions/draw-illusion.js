@@ -1,9 +1,12 @@
-let pic
+let MODE      = 'LOCAL'
 let defWidth  = 800
 let defHeight = 600
+let picLocation = '/vc/docs/sketches/optical-illusions/munkerstudy.png';
+let pic
 
 function preload() {
-  let picLocation = '/vc/docs/sketches/optical-illusions/munkerstudy.png';
+  if (MODE == 'LOCAL')
+    picLocation = 'optical-illusions/munkerstudy.png'
   pic = loadImage(picLocation);
 }
 
