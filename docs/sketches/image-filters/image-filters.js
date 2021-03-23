@@ -1,12 +1,16 @@
+var MODE = 'LOCAL'
 let pic1;
 let pic2;
 let pic3;
 let pic4;
 let width;
 let height;
+let picLocation = './lenna.png';
 
 function preload() {
-  let picLocation = '../lenna.png';
+  if (MODE == 'LOCAL')
+    picLocation = './image-filters/lenna.png'
+
   pic1 = loadImage(picLocation);
   pic2 = loadImage(picLocation);
   pic3 = loadImage(picLocation);
@@ -89,7 +93,6 @@ function applyAsciiFilter(img) {
     }
     out = out + '\n';
   }
-  console.log(out)
 }
 
 
