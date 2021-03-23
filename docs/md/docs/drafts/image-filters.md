@@ -1,3 +1,3 @@
-# Image Filters draft
+# Image Filters
 
-> :P5 sketch=/docs/sketches/drafts/image-filter-draft.js, width=710, height=400
+> :P5 sketch=/docs/sketches/image-filters/image-filters.js, width=710, height=400

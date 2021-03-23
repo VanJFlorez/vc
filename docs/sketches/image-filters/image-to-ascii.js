@@ -1,6 +1,6 @@
-var MODE = 'LOCAL'
+var MODE = 'PROD'
 let pic;
-let picLocation = './lenna.png';
+let picLocation = '/vc/docs/sketches/image-filters/star.png';
 let asciiResults;
 
 function preload() {
