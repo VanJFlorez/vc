@@ -1,11 +1,11 @@
-var MODE = 'PROD'
+var MODE = 'LOCAL'
 let pic;
-let picLocation = '/vc/docs/sketches/image-filters/star.png';
+let picLocation = '/vc/docs/sketches/image-ascii/star.png';
 let asciiResults;
 
 function preload() {
   if (MODE == 'LOCAL')
-    picLocation = './image-filters/star.png'
+    picLocation = './image-ascii/star.png'
 
   pic = loadImage(picLocation);
 }
