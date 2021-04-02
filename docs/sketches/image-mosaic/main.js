@@ -4,7 +4,7 @@ let picLocRegex = '/vc/docs/sketches/image-mosaic/?.webp';
 let bigPictureLoc = '/vc/docs/sketches/image-mosaic/bigpicture.jpg';
 let averages = [];
 let paletteSize = 16;
-var tileSize = 10;
+var tileSize = 20;
 var mos;
 
 function preload() {
@@ -32,8 +32,8 @@ function showMosaic() {
   for (let y = 0; y < bigPicture.height; y = y + tileSize) {
     for (let x = 0; x < bigPicture.width; x = x + tileSize) {
       let tile = bigPicture.get(x, y, tileSize - 1, tileSize - 1);
-      [r, g, b, a] = getAverageColor(tile);
-      let i = getSimilarColor(r, g, b, a);
+      [r, g, b] = getAverageColor(tile);
+      let i = getSimilarColor(r, g, b);
       pics[i].resize(tileSize, tileSize);
       image(pics[i], x, y);
     }
@@ -44,23 +44,25 @@ function showAverages() {
   for (let y = 0; y < bigPicture.height; y = y + tileSize) {
     for (let x = 0; x < bigPicture.width; x = x + tileSize) {
       let tile = bigPicture.get(x, y, tileSize - 1, tileSize - 1);
-      [r, g, b, a] = getAverageColor(tile);
-      let c = color(r, g, b, aw);
+      [r, g, b] = getAverageColor(tile);
+      let c = color(r, g, b);
       fill(c)
       square(x, y, tileSize);
     }
   }
 }
 
-function getSimilarColor(r, g, b, a) {
+function getSimilarColor(r, g, b) {
+  let w1 = [0.30, 0.59, 0.11];
+  let w2 = [0.00, 0.00, 0.99];
+  let w3 = [0.30, 0.70, 0.00];
   let idx = 0;
   let ans = -1;
   let min = 999999999999;
   for (avg of averages) {
-    let d =  (avg[0] - r)*(avg[0] - r)
-           + (avg[1] - g)*(avg[1] - g)
-           + (avg[2] - b)*(avg[2] - b)
-           + (avg[3] - b)*(avg[3] - a);
+    let d =  (avg[0] - r)*(avg[0] - r)*w3[0]
+           + (avg[1] - g)*(avg[1] - g)*w3[1]
+           + (avg[2] - b)*(avg[2] - b)*w3[2];
     if (d < min) {
       min = d;
       ans = idx;
@@ -82,7 +84,6 @@ function getAverageColor(pic) {
   let r = 0;
   let g = 0;
   let b = 0;
-  let a = 0;
   let n = 0;
   for (let y = 0; y < pic.height; y++) {
     for (let x = 0; x < pic.width; x++) {
@@ -90,9 +91,8 @@ function getAverageColor(pic) {
       r += pic.pixels[i + 0];
       g += pic.pixels[i + 1];
       b += pic.pixels[i + 2];
-      a += pic.pixels[i + 3];
       n++;
     }
   }
-  return [r/n, g/n, b/n, a/n];
+  return [r/n, g/n, b/n];
 }
