@@ -4,13 +4,13 @@ let picLocRegex = '/vc/docs/sketches/image-mosaic/?.webp';
 let bigPictureLoc = '/vc/docs/sketches/image-mosaic/bigpicture.jpg';
 let averages = [];
 let paletteSize = 16;
-var tileSize = 20;
+var tileSize = 10;
 var mos;
 
 function preload() {
   if (MODE == 'LOCAL') {
     bigPictureLoc = './image-mosaic/bigpicture.jpg';
-    picLocRegex = './image-mosaic/palette2/?.png';
+    picLocRegex = './image-mosaic/palette1/?.webp';
   }
 
   bigPicture = loadImage(bigPictureLoc);
@@ -60,9 +60,9 @@ function getSimilarColor(r, g, b) {
   let ans = -1;
   let min = 999999999999;
   for (avg of averages) {
-    let d =  (avg[0] - r)*(avg[0] - r)*w3[0]
-           + (avg[1] - g)*(avg[1] - g)*w3[1]
-           + (avg[2] - b)*(avg[2] - b)*w3[2];
+    let d =  (avg[0] - r)*(avg[0] - r)
+           + (avg[1] - g)*(avg[1] - g)
+           + (avg[2] - b)*(avg[2] - b);
     if (d < min) {
       min = d;
       ans = idx;
@@ -73,7 +73,7 @@ function getSimilarColor(r, g, b) {
 }
 
 function storePics() {
-  for (i = 1; i < paletteSize; i++) {
+  for (i = 0; i < paletteSize; i++) {
     pics[i].resize(tileSize, tileSize);
     averages.push(getAverageColor(pics[i]))
   }
