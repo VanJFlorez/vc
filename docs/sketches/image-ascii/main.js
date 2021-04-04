@@ -2,44 +2,43 @@ var MODE = 'LOCAL'
 let pic;
 let picLocation = '/vc/docs/sketches/image-ascii/star.png';
 let asciiResults;
+let filters = [
+  (r, g, b, a) => r,                                 // red
+  (r, g, b, a) => g,                                 // green
+  (r, g, b, a) => b,                                 // blue
+  (r, g, b, a) => a,                                 // gamma
+  (r, g, b, a) => (r + g + b)/3,                     // gray
+  (r, g, b, a) => (0.2989*r + 0.5870*g + 0.1140*b)/3 // luma
+]
+// Controls
+let palSel;
+let palette = [' ', '.', ':', '-', '=', '+', '*', '#'];
+let filSel;
+let filter = 0;
 
 function preload() {
   if (MODE == 'LOCAL')
     picLocation = './image-ascii/lenna.png'
-
   pic = loadImage(picLocation);
 }
 
 function setup() {
+  noLoop();
   createCanvas(5000, 5000);
+  addPaletteSelector();
+  addChannelSelector(),
   textFont('monospace');
+}
+
+function draw() {
   applyAsciiFilter(pic);
 }
 
 function asciifilter(r, g, b, a) {
-  // 01234567   256
-  //  .:-=+*#   %@   
-  let avg = Math.floor((r + g + b)/3);
-    switch (Math.floor(avg/32)) {
-      case 0:
-        return ' '
-      case 1:
-        return '.'
-      case 2:
-        return ':'
-      case 3:
-        return '-'
-      case 4:
-        return '='
-      case 5:
-        return '+'
-      case 6:
-        return '*'
-      case 7:
-        return '#'
-      default:
-        return '@'; 
-  }
+  // let avg = Math.floor((r + g + b)/3);
+  let avg = filters[filter](r, g, b, a);
+  let idx = Math.floor(avg/32);
+  return palette[idx];
 }
 
 /**
@@ -64,18 +63,17 @@ function applyAsciiFilter(img) {
 
 
 function addChannelSelector() {
-  chanSel = createSelect();
-  chanSel.position(40, 10);
-  chanSel.option('red',   0);
-  chanSel.option('blue',  1);
-  chanSel.option('gree',  2);
-  chanSel.option('gamma', 3);
-  chanSel.option('grayavg',  4);
-  chanSel.option('luma',  4);
-  chanSel.selected('gray');
-  chanSel.changed(() => {
-    showAvg = false;
-    palette = chanSel.value();
+  filSel = createSelect();
+  filSel.position(100, 10);
+  filSel.option('red',    0);
+  filSel.option('green',  1);
+  filSel.option('blue',   2);
+  filSel.option('gamma',  3);
+  filSel.option('grayavg',4);
+  filSel.option('luma',   5);
+  filSel.selected('red');
+  filSel.changed(() => {
+    filter = filSel.value();
     redraw();
   })
 }
@@ -89,6 +87,8 @@ function addPaletteSelector() {
   palSel.changed(() => {
     showAvg = false;
     palette = palSel.value();
+
+    // Math.floor(256/palette.lenght)
     redraw();
   })
 }
