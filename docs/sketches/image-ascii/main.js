@@ -10,11 +10,17 @@ let filters = [
   (r, g, b, a) => (r + g + b)/3,                     // gray
   (r, g, b, a) => (0.2989*r + 0.5870*g + 0.1140*b)/3 // luma
 ]
+// http://paulbourke.net/dataformats/asciiart/
+let palettes = [
+  [' ', '.', ':', '-', '=', '+', '*', '#'],
+  ['$','@','B','%','8','&','W','#','*','o','a','h','k','b','d','p','m','Z','O','0','Q','L','C','J','U','Y','X','z','c','v','u','n','r','j','f','t','/','|','(',')','1','{','}','[',']','?','-','_','+','~','<','>','i','!','l',';',':',',','"','^','`','\'','.',' '].reverse()
+]
 // Controls
-let palSel;
-let palette = [' ', '.', ':', '-', '=', '+', '*', '#'];
 let filSel;
-let filter = 0;
+let filter   = 0;
+let palSel;
+let palette  = 0;
+let bucketsz = 32;
 
 function preload() {
   if (MODE == 'LOCAL')
@@ -24,21 +30,21 @@ function preload() {
 
 function setup() {
   noLoop();
-  createCanvas(5000, 5000);
   addPaletteSelector();
-  addChannelSelector(),
-  textFont('monospace');
+  addChannelSelector();
 }
 
 function draw() {
+  createCanvas(5000, 5000);
+  textFont('monospace');
   applyAsciiFilter(pic);
 }
 
 function asciifilter(r, g, b, a) {
   // let avg = Math.floor((r + g + b)/3);
   let avg = filters[filter](r, g, b, a);
-  let idx = Math.floor(avg/32);
-  return palette[idx];
+  let idx = Math.floor(avg/bucketsz);
+  return palettes[palette][idx];
 }
 
 /**
@@ -73,7 +79,7 @@ function addChannelSelector() {
   filSel.option('luma',   5);
   filSel.selected('red');
   filSel.changed(() => {
-    filter = filSel.value();
+    filter = Number(filSel.value());
     redraw();
   })
 }
@@ -82,13 +88,14 @@ function addPaletteSelector() {
   palSel = createSelect();
   palSel.position(40, 10);
   palSel.option('8bit',   0);
-  palSel.option('256bit', 1);
+  palSel.option('64bit', 1);
   palSel.selected('8bit');
   palSel.changed(() => {
-    showAvg = false;
-    palette = palSel.value();
-
-    // Math.floor(256/palette.lenght)
+    palette = Number(palSel.value());
+    if (palettes[palette].length == 8)
+      bucketsz = 32;
+    else 
+      bucketsz = 4;
     redraw();
   })
 }
