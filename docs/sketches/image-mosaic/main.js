@@ -1,9 +1,9 @@
-var MODE = 'LOCAL'
+var MODE = 'PROD'
 // Pictures
 let pics = [[], [], []];
 let averages = [];
-let picLocRegex = '/vc/docs/sketches/image-mosaic/?.webp';
-let bigPictureLoc = '/vc/docs/sketches/image-mosaic/bigpicture.jpg';
+let picLocRegex = '/vc/docs/sketches/image-mosaic/bigpicture.jpg';
+let bigPictureLoc = '/vc/docs/sketches/image-mosaic/palette&/?.png';
 var paletteSize = 16;
 // Controls
 var palSel;

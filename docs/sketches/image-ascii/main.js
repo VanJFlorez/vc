@@ -5,21 +5,15 @@ let asciiResults;
 
 function preload() {
   if (MODE == 'LOCAL')
-    picLocation = './image-ascii/star.png'
+    picLocation = './image-ascii/lenna.png'
 
   pic = loadImage(picLocation);
 }
 
 function setup() {
-  // createCanvas(1000, 1000);
-  asciiResults = applyAsciiFilter(pic);
-}
-
-function draw() {
-  // fill(255, 255, 255)
-  // text(asciiResults, 0, 0, 800, 600)
-  let div = createDiv();
-  div.child(asciiResults);
+  createCanvas(5000, 5000);
+  textFont('monospace');
+  applyAsciiFilter(pic);
 }
 
 function asciifilter(r, g, b, a) {
@@ -49,27 +43,52 @@ function asciifilter(r, g, b, a) {
 }
 
 /**
- * Returns a list of strings. Each string has ascii characters
- * that represents each row of the image in gray scale.
+ * Print to the global the given image converted to ascii art.
  * @param {Image} img 
  * @returns 
  */
 function applyAsciiFilter(img) {
-  let asciiImg = createDiv(); //   document.createElement("div");
   img.loadPixels()
+  pixY = 10;
   for (let y = 0; y < img.height; y++) {
     let out = ''
     for (let x = 0; x < img.width; x++) {
-      let i = (x + y * width)*4;
+      let i = (x + y * img.width)*4;
       let char = asciifilter(img.pixels[i + 0], img.pixels[i + 1], img.pixels[i + 2], img.pixels[i + 3]);
       out += char;
     }
-    out += '\n';
-    let row = createElement('pre', out);
-    asciiImg.child(row)
-    // let row = document.createElement("pre");
-    // row.appendChild(document.createTextNode(out));
-    // asciiImg.appendChild(row);
+    text(out, 10, pixY);
+    pixY += 10;
   }
-  return asciiImg
+}
+
+
+function addChannelSelector() {
+  chanSel = createSelect();
+  chanSel.position(40, 10);
+  chanSel.option('red',   0);
+  chanSel.option('blue',  1);
+  chanSel.option('gree',  2);
+  chanSel.option('gamma', 3);
+  chanSel.option('grayavg',  4);
+  chanSel.option('luma',  4);
+  chanSel.selected('gray');
+  chanSel.changed(() => {
+    showAvg = false;
+    palette = chanSel.value();
+    redraw();
+  })
+}
+
+function addPaletteSelector() {
+  palSel = createSelect();
+  palSel.position(40, 10);
+  palSel.option('8bit',   0);
+  palSel.option('256bit', 1);
+  palSel.selected('8bit');
+  palSel.changed(() => {
+    showAvg = false;
+    palette = palSel.value();
+    redraw();
+  })
 }
