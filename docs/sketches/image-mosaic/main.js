@@ -1,4 +1,4 @@
-var MODE = 'PROD'
+var MODE = 'LOCAL'
 // Pictures
 let pics = [[], [], []];
 let averages = [];
@@ -12,6 +12,7 @@ var tilSel;
 var tileSize = 50;
 var checkbox;
 var showAvg = false;
+var fullscreen = false;
 
 function preload() {
   if (MODE == 'LOCAL') {
@@ -36,13 +37,13 @@ function setup() {
   addCheckbox();
   addPaletteSelector();
   addTileSizeSelector();
-
+  
 }
 
 function draw() {
+  bigPicture.resize(770, 455);
   createCanvas(bigPicture.width, bigPicture.height);
-  bigPicture.resize(1000, 1000);
-
+  
   let beg = performance.now()
   storePics();
   showMosaic();
