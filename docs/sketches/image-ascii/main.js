@@ -21,6 +21,8 @@ let filter   = 0;
 let palSel;
 let palette  = 0;
 let bucketsz = 32;
+let button;
+let fscreen = false;
 
 function preload() {
   if (MODE == 'LOCAL')
@@ -32,6 +34,7 @@ function setup() {
   noLoop();
   addPaletteSelector();
   addChannelSelector();
+  addFullScreenButton();
 }
 
 function draw() {
@@ -98,4 +101,13 @@ function addPaletteSelector() {
       bucketsz = 4;
     redraw();
   })
+}
+
+function addFullScreenButton() {
+  button = createButton('on/off');
+  button.position(180, 10);
+  button.mousePressed(() => {
+    fscreen = !fscreen;
+    fullscreen(fscreen)
+  });
 }
